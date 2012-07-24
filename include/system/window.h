@@ -214,6 +214,8 @@ enum {
      */
     NATIVE_WINDOW_TRANSFORM_HINT = 8,
 
+    NATIVE_WINDOW_NUM_BUFFERS = 9,
+
     /*
      * Boolean that indicates whether the consumer is running more than
      * one buffer behind the producer.
