@@ -37,6 +37,8 @@ loglevel 3
     export LOOP_MOUNTPOINT /mnt/obb
     export SD_EXT_DIRECTORY /sd-ext
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar
+export TERMINFO /system/etc/terminfo
+export TERM linux
 
 # Backward compatibility
     symlink /system/etc /etc
@@ -227,21 +229,6 @@ on post-fs-data
     # won't work.
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
-
-
-# allow system to modify cpufreq control files  
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq  
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq  
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chown root system /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-    chmod 0664 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-    chown root system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-    chown root system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq    
  
 # Include extra init file
     import /system/etc/init.local.rc
@@ -300,8 +287,15 @@ on boot
     chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/input_boost
 
     # Assume SMP uses shared cpufreq policy for all CPUs
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
+    chown system system /sys/block/mmcblk0/queue/scheduler
+    chmod 0664 /sys/block/mmcblk0/queue/scheduler
 
     chown system system /sys/class/timed_output/vibrator/enable
     chown system system /sys/class/leds/keyboard-backlight/brightness

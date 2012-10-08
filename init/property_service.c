@@ -45,6 +45,7 @@
 #include "util.h"
 #include "log.h"
 
+
 #define PERSISTENT_PROPERTY_DIR  "/data/property"
 
 static int persistent_properties_loaded = 0;
@@ -89,6 +90,7 @@ struct {
     { NULL, 0, 0 }
 };
 
+
 /*
  * White list of UID that are allowed to start/stop services.
  * Currently there are no user apps that require.
@@ -102,6 +104,7 @@ struct {
     { "ril-daemon",AID_RADIO, AID_RADIO },
      {NULL, 0, 0 }
 };
+
 
 typedef struct {
     void *data;
@@ -146,12 +149,12 @@ out:
     return -1;
 }
 
-/* (8 header words + 247 toc words) = 1020 bytes */
-/* 1024 bytes header and toc + 247 prop_infos @ 128 bytes = 32640 bytes */
+/* (8 header words + 372 toc words) = 1520 bytes */
+/* 1536 bytes header and toc + 372 prop_infos @ 128 bytes = 49152 bytes */
 
-#define PA_COUNT_MAX  247
-#define PA_INFO_START 1024
-#define PA_SIZE       32768
+#define PA_COUNT_MAX  372
+#define PA_INFO_START 1536
+#define PA_SIZE       49152
 
 static workspace pa_workspace;
 static prop_info *pa_info_array;

@@ -2104,6 +2104,7 @@ void scanline_t32cb16(context_t* c)
     int sR, sG, sB;
     uint32_t s, d;
 
+   
     if (ct==1 || uint32_t(dst)&2) {
 last_one:
         s = GGL_RGBA_TO_HOST( *src++ );
@@ -2132,6 +2133,7 @@ last_one:
     if (ct > 0) {
         goto last_one;
     }
+
 }
 
 void scanline_t32cb16blend(context_t* c)
