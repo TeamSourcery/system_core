@@ -15,7 +15,6 @@
  */
 
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -54,7 +53,6 @@
 void add_environment(const char *name, const char *value);
 
 extern int init_module(void *, unsigned long, const char *);
-extern int init_export_rc_file(const char *);
 
 static int write_file(const char *path, const char *value)
 {
@@ -81,12 +79,12 @@ static int write_file(const char *path, const char *value)
 
 static int _open(const char *path)
 {
-   int fd;
- 	
+    int fd;
+
     fd = open(path, O_RDONLY | O_NOFOLLOW);
     if (fd < 0)
         fd = open(path, O_WRONLY | O_NOFOLLOW);
- 	
+
     return fd;
 }
 
@@ -108,9 +106,9 @@ static int _chown(const char *path, unsigned int uid, unsigned int gid)
         return -1;
     }
 
-    return 0;
+    close(fd);
 
-    return ret;
+    return 0;
 }
 
 static int _chmod(const char *path, mode_t mode)
@@ -123,11 +121,11 @@ static int _chmod(const char *path, mode_t mode)
         return -1;
     }
 
-   ret = fchmod(fd, mode);
-   if (ret < 0) {
-       int errno_copy = errno;
-       close(fd);
-       errno = errno_copy;
+    ret = fchmod(fd, mode);
+    if (ret < 0) {
+        int errno_copy = errno;
+        close(fd);
+        errno = errno_copy;
         return -1;
     }
 
@@ -236,23 +234,6 @@ int do_class_reset(int nargs, char **args)
     return 0;
 }
 
-int do_export_rc(int nargs, char **args)
-{
-        /* Import environments from a specified file.
-         * The file content is of the form:
-         *     export <env name> <value>
-         * e.g.
-         *     export LD_PRELOAD /system/lib/xyz.so
-         *     export PROMPT abcde
-         * Differences between "import" and "export_rc":
-         * 1) export_rc can only import environment vars
-         * 2) export_rc is performed when the command
-         *    is executed rather than at the time the
-         *    command is parsed (i.e. "import")
-         */
-    return init_export_rc_file(args[1]);
-}
-
 int do_domainname(int nargs, char **args)
 {
     return write_file("/proc/sys/kernel/domainname", args[1]);
@@ -351,7 +332,6 @@ static struct {
     unsigned flag;
 } mount_flags[] = {
     { "noatime",    MS_NOATIME },
-    { "noexec",     MS_NOEXEC },
     { "nosuid",     MS_NOSUID },
     { "nodev",      MS_NODEV },
     { "nodiratime", MS_NODIRATIME },
@@ -581,7 +561,7 @@ int do_start(int nargs, char **args)
     struct service *svc;
     svc = service_find_by_name(args[1]);
     if (svc) {
-        service_restart(svc);
+        service_start(svc, NULL);
     }
     return 0;
 }

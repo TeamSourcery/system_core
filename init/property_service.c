@@ -45,7 +45,6 @@
 #include "util.h"
 #include "log.h"
 
-
 #define PERSISTENT_PROPERTY_DIR  "/data/property"
 
 static int persistent_properties_loaded = 0;
@@ -90,7 +89,6 @@ struct {
     { NULL, 0, 0 }
 };
 
-
 /*
  * White list of UID that are allowed to start/stop services.
  * Currently there are no user apps that require.
@@ -104,7 +102,6 @@ struct {
     { "ril-daemon",AID_RADIO, AID_RADIO },
      {NULL, 0, 0 }
 };
-
 
 typedef struct {
     void *data;
